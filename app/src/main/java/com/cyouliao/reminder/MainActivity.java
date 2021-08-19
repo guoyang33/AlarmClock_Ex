@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -38,26 +39,11 @@ public class MainActivity extends AppCompatActivity {
 //        setContentView(R.layout.activity_main);
         createNotificationChannel();
 
-        binding.selectTimeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showTimePicker();
-            }
-        });
+        binding.selectTimeBtn.setOnClickListener(v -> showTimePicker());
 
-        binding.setAlarmBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setAlarm();
-            }
-        });
+        binding.setAlarmBtn.setOnClickListener(v -> setAlarm());
 
-        binding.cancelAlarmBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancelAlarm();
-            }
-        });
+        binding.cancelAlarmBtn.setOnClickListener(v -> cancelAlarm());
     }
 
     private void cancelAlarm() {
@@ -96,23 +82,21 @@ public class MainActivity extends AppCompatActivity {
 
         picker.show(getSupportFragmentManager(), "cyouliao");
 
-        picker.addOnPositiveButtonClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (picker.getHour() > 12) {
-                    binding.selectedTime.setText(
-                            String.format("%02d", (picker.getHour()-12)+" : "+String.format("%02d", picker.getMinute())+" PM")
-                    );
-                } else {
-                    binding.selectedTime.setText(picker.getHour()+" : "+picker.getMinute() + " AM");
-                }
-
-                calendar = Calendar.getInstance();
-                calendar.set(Calendar.HOUR_OF_DAY, picker.getHour());
-                calendar.set(Calendar.MINUTE, picker.getMinute());
-                calendar.set(Calendar.SECOND, 0);
-                calendar.set(Calendar.MILLISECOND, 0);
+        picker.addOnPositiveButtonClickListener(v -> {
+            Log.d("where", (String) String.format("%02d", picker.getHour()));
+            if (picker.getHour() > 12) {
+                binding.selectedTime.setText(
+                        String.format("%02d", (picker.getHour()-12))+" : "+String.format("%02d", picker.getMinute())+" PM"
+                );
+            } else {
+                binding.selectedTime.setText(picker.getHour()+" : "+picker.getMinute() + " AM");
             }
+
+            calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, picker.getHour());
+            calendar.set(Calendar.MINUTE, picker.getMinute());
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
         });
     }
 
